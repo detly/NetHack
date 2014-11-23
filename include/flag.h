@@ -175,6 +175,9 @@ struct instance_flags {
 	uchar	bouldersym;	/* symbol for boulder display */
 	boolean travel1;	/* first travel step */
 	coord	travelcc;	/* coordinates for travel_cache */
+#ifdef SIMPLE_MAIL
+	boolean simplemail;	/* simple mail format $NAME:$MESSAGE */
+#endif
 #ifdef WIZARD
 	boolean  sanity_check;	/* run sanity checks */
 	boolean  mon_polycontrol;	/* debug: control monster polymorphs */
@@ -182,6 +185,9 @@ struct instance_flags {
 #ifdef TTY_GRAPHICS
 	char prevmsg_window;	/* type of old message window to use */
 	boolean  extmenu;	/* extended commands use menu interface */
+#endif
+#ifdef MENU_COLOR
+	boolean use_menu_color;	/* use color in menus; only if wc_color */
 #endif
 #ifdef MFLOPPY
 	boolean  checkspace;	/* check disk space before writing files */
@@ -216,6 +222,17 @@ struct instance_flags {
 	boolean lan_mail;	/* mail is initialized */
 	boolean lan_mail_fetched; /* mail is awaiting display */
 #endif
+#ifdef SORTLOOT
+	char sortloot;          /* sort items to loot alphabetically */
+#endif
+#ifdef PARANOID
+	boolean  paranoid_hit;  /* Ask for 'yes' when hitting peacefuls */
+#endif
+
+#if defined(HPMON) && defined(TEXTCOLOR)
+        boolean use_hpmon;
+#endif
+
 /*
  * Window capability support.
  */

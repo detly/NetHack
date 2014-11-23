@@ -40,6 +40,10 @@ extern struct window_procs Gnome_procs;
 #ifdef MSWIN_GRAPHICS
 extern struct window_procs mswin_procs;
 #endif
+#ifdef LISP_GRAPHICS
+#include "winlisp.h"
+extern struct window_procs lisp_procs;
+#endif
 
 STATIC_DCL void FDECL(def_raw_print, (const char *s));
 
@@ -81,6 +85,9 @@ struct win_choices {
 #ifdef MSWIN_GRAPHICS
     { &mswin_procs, 0 },
 #endif
+#ifdef LISP_GRAPHICS
+    { &lisp_procs, win_lisp_init },
+#endif
     { 0, 0 }		/* must be last */
 };
 
@@ -96,10 +103,16 @@ void
 choose_windows(s)
 const char *s;
 {
+    char *ow; const char *wt;
     register int i;
+    
+    if (!strcmp(s, DEFAULT_WINDOW_SYS) && (ow = getenv("OVERRIDEWIN")))
+      wt = ow;
+    else
+      wt = s;
 
     for(i=0; winchoices[i].procs; i++)
-	if (!strcmpi(s, winchoices[i].procs->name)) {
+	if (!strcmpi(wt, winchoices[i].procs->name)) {
 	    windowprocs = *winchoices[i].procs;
 	    if (winchoices[i].ini_routine) (*winchoices[i].ini_routine)();
 	    return;
