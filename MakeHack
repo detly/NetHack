@@ -21,7 +21,7 @@ real-build: $(TEMP_MAKEFILE)
 	  VARDATND="x11tiles pet_mark.xbm rip.xpm mapbg.xpm" \
 	  Guidebook data oracles options quest.dat rumors dungeon spec_levs \
 	  check-dlb x11tiles pet_mark.xbm rip.xpm mapbg.xpm
-	$(MAKE) -f $(TEMP_MAKEFILE) -C util LFLAGS='$(LFLAGS)' CFLAGS='$(CFLAGS)' recover
+	$(MAKE) -C util LFLAGS='$(LFLAGS)' CFLAGS='$(CFLAGS)' recover
 	touch $@
 
 TARGETS = console lisp x11
@@ -30,7 +30,7 @@ define build_target
 	$(MAKE) -f $(TEMP_MAKEFILE) clean
 	touch include/config.h
 	sleep 2
-	$(MAKE) -f $(TEMP_MAKEFILE) LFLAGS='$(LFLAGS)' CFLAGS='$(CFLAGS) $(EXTRACPP_$1)' \
+	$(MAKE) LFLAGS='$(LFLAGS)' CFLAGS='$(CFLAGS) $(EXTRACPP_$1)' \
 		WINSRC='$(SRC_$1)' WINOBJ='$(OBJ_$1)' WINLIB='$(LIB_$1)' \
 		$(EXTRA_$1) GAME='nethack.$1' \
 		-C src 'nethack.$1'
@@ -50,8 +50,6 @@ EXTRACPP_lisp = -DLISP_GRAPHICS -DDEFAULT_WINDOW_SYS=\"lisp\"
 
 
 $(TEMP_MAKEFILE):
-# setup.sh makes the symlinks for the Makefiles. Giving it any
-# (in this case, 1) tells it to make symlinks.
 	# sh sys/unix/setup.sh 1
 	umask 0
 	ln -s sys/unix/Makefile.top $@
@@ -66,5 +64,12 @@ clean:
 	rm -f $(patsubst %,src/nethack.%,$(TARGETS) dummy)
 	if [ -f Makefile ] ; then $(MAKE) -f $(TEMP_MAKEFILE) spotless ; fi
 	find . -name Makefile -print0 | xargs -r -0 --no-run-if-empty rm
+	rm $(TEMP_MAKEFILE)
 
 .PHONY: clean real-build
+
+# The temporary makefile tries to re-invoke itself via the shell (see the
+# check-dlb target). This default target will simply pass through any unknown
+# targets to the temporary makefile.
+.DEFAULT:
+	$(MAKE) -f $(TEMP_MAKEFILE) $@
