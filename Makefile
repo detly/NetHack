@@ -64,7 +64,7 @@ clean:
 	rm -f nh10.pcf*
 	rm -f $(patsubst %,src/nethack.%,$(TARGETS) dummy)
 	if [ -f Makefile ] ; then $(MAKE) -f $(TEMP_MAKEFILE) spotless ; fi
-	find . -mindepth 1 -name Makefile -print0 | xargs -r -0 --no-run-if-empty rm
+	find . -mindepth 2 -name Makefile -print0 | xargs -r -0 --no-run-if-empty rm
 	rm $(TEMP_MAKEFILE)
 
 .PHONY: clean
