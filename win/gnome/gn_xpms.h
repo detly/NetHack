@@ -2,7 +2,7 @@
 /* Copyright (C) 1998 by Erik Andersen <andersee@debian.org> */
 /* NetHack may be freely redistributed.  See license for details. */
 /* These XPMs are the artwork of Warwick Allison
- * <warwick@troll.no>.  They have been borrowed from 
+ * <warwick@troll.no>.  They have been borrowed from
  * the most excellent NetHackQt, until such time as
  * we can come up with something better.
  *
@@ -11,7 +11,7 @@
  */
 
 /* XPM */
-static char *blind_xpm[] = {
+static const char *blind_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 5 1",
 /* colors */
@@ -63,7 +63,7 @@ static char *blind_xpm[] = {
 "........................................"
 };
 /* XPM */
-static char *cha_xpm[] = {
+static const char *cha_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 14 1",
 /* colors */
@@ -124,7 +124,7 @@ static char *cha_xpm[] = {
 "++++++++++++++++++++++++++++++++++++++++"
 };
 /* XPM */
-static char *chaotic_xpm[] = {
+static const char *chaotic_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 9 1",
 /* colors */
@@ -180,7 +180,7 @@ static char *chaotic_xpm[] = {
 "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 };
 /* XPM */
-static char *cns_xpm[] = {
+static const char *cns_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 19 1",
 /* colors */
@@ -246,7 +246,7 @@ static char *cns_xpm[] = {
 "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 };
 /* XPM */
-static char *confused_xpm[] = {
+static const char *confused_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 13 1",
 /* colors */
@@ -306,7 +306,7 @@ static char *confused_xpm[] = {
 "OOOOOOOOOOOOOOOOOOOOO+%%% $OOOOOOOOOOOOO"
 };
 /* XPM */
-static char *dex_xpm[] = {
+static const char *dex_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 19 1",
 /* colors */
@@ -372,7 +372,7 @@ static char *dex_xpm[] = {
 "#################O######################"
 };
 /* XPM */
-static char *ext_enc_xpm[] = {
+static const char *ext_enc_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 13 1",
 /* colors */
@@ -432,7 +432,7 @@ static char *ext_enc_xpm[] = {
 "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
 };
 /* XPM */
-static char *hallu_xpm[] = {
+static const char *hallu_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 30 1",
 /* colors */
@@ -509,7 +509,7 @@ static char *hallu_xpm[] = {
 "$$$$$$$$$$$$$$$$$$$$$%$$+$$$$$$$$$$$$$$$"
 };
 /* XPM */
-static char *hungry_xpm[] = {
+static const char *hungry_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 15 1",
 /* colors */
@@ -571,7 +571,7 @@ static char *hungry_xpm[] = {
 "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
 };
 /* XPM */
-static char *hvy_enc_xpm[] = {
+static const char *hvy_enc_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 13 1",
 /* colors */
@@ -631,7 +631,7 @@ static char *hvy_enc_xpm[] = {
 "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
 };
 /* XPM */
-static char *int_xpm[] = {
+static const char *int_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 12 1",
 /* colors */
@@ -690,7 +690,7 @@ static char *int_xpm[] = {
 "OOOOOOOOOOOOOOOOOOOOOOOoOOOOOOOOOOOOOOOO"
 };
 /* XPM */
-static char *lawful_xpm[] = {
+static const char *lawful_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 10 1",
 /* colors */
@@ -747,7 +747,7 @@ static char *lawful_xpm[] = {
 "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
 };
 /* XPM */
-static char *mod_enc_xpm[] = {
+static const char *mod_enc_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 13 1",
 /* colors */
@@ -807,7 +807,7 @@ static char *mod_enc_xpm[] = {
 "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
 };
 /* XPM */
-static char *neutral_xpm[] = {
+static const char *neutral_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 14 1",
 /* colors */
@@ -868,7 +868,7 @@ static char *neutral_xpm[] = {
 "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
 };
 /* XPM */
-static char *ovr_enc_xpm[] = {
+static const char *ovr_enc_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 13 1",
 /* colors */
@@ -928,7 +928,7 @@ static char *ovr_enc_xpm[] = {
 "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
 };
 /* XPM */
-static char *satiated_xpm[] = {
+static const char *satiated_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 23 1",
 /* colors */
@@ -998,7 +998,7 @@ static char *satiated_xpm[] = {
 "########################################"
 };
 /* XPM */
-static char *sick_fp_xpm[] = {
+static const char *sick_fp_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 30 1",
 /* colors */
@@ -1075,7 +1075,7 @@ static char *sick_fp_xpm[] = {
 "*****************=*=********************"
 };
 /* XPM */
-static char *sick_il_xpm[] = {
+static const char *sick_il_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 23 1",
 /* colors */
@@ -1145,7 +1145,7 @@ static char *sick_il_xpm[] = {
 "#################$#$####################"
 };
 /* XPM */
-static char *slt_enc_xpm[] = {
+static const char *slt_enc_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 13 1",
 /* colors */
@@ -1205,7 +1205,7 @@ static char *slt_enc_xpm[] = {
 "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
 };
 /* XPM */
-static char *str_xpm[] = {
+static const char *str_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 17 1",
 /* colors */
@@ -1269,7 +1269,7 @@ static char *str_xpm[] = {
 "++++++++++++++++++++++++++++++++++++++++"
 };
 /* XPM */
-static char *stunned_xpm[] = {
+static const char *stunned_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 12 1",
 /* colors */
@@ -1328,7 +1328,7 @@ static char *stunned_xpm[] = {
 "OOOOOOOOOOOOOOOOOOOOO.X%& $OOOOOOOOOOOOO"
 };
 /* XPM */
-static char *wis_xpm[] = {
+static const char *wis_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 13 1",
 /* colors */
@@ -1388,7 +1388,7 @@ static char *wis_xpm[] = {
 "oooooooooooooooooooooooooooooooooooooooo"
 };
 /* XPM */
-static char *nothing_xpm[] = {
+static const char *nothing_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "40 40 13 1",
 /* colors */

@@ -33,7 +33,7 @@
 static GtkWidget *worn_contents[WORN_HEIGHT][WORN_WIDTH];
 static struct obj *last_worn_objects[WORN_HEIGHT][WORN_WIDTH];
 
-GdkImlibImage *image_of_worn_object(struct obj *o);
+GdkPixbuf *image_of_worn_object(struct obj *o);
 void ghack_worn_display(GtkWidget *win, boolean block, gpointer data);
 
 GtkWidget*
@@ -71,11 +71,11 @@ ghack_init_worn_window()
     return top;
 }
 
-GdkImlibImage*
+GdkPixbuf*
 image_of_worn_object(struct obj *o)
 {
     int glyph;
-    GdkImlibImage *im;
+    GdkPixbuf *im;
 
     if (o)
 	glyph = obj_to_glyph(o);

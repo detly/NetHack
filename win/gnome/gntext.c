@@ -25,7 +25,7 @@
 GtkWidget *RIP = NULL;
 GtkWidget *RIPlabel = NULL;
 GtkWidget *TW_window = NULL;
-GnomeLess *gless;
+GtkTextView *gless;
 
 static int showRIP = 0;
 
@@ -34,8 +34,13 @@ static int showRIP = 0;
 
 void ghack_text_window_clear(GtkWidget *widget, gpointer data)
 {
+    GtkTextBuffer *gbuffer;
     g_assert (gless != NULL);
-    gtk_editable_delete_text (GTK_EDITABLE (gless->text), 0, 0);
+
+    gbuffer = gtk_text_view_get_buffer (gless);
+    g_assert (gbuffer != NULL);
+
+    gtk_text_buffer_set_text (gbuffer, "", -1);
 }
 
 void ghack_text_window_destroy()
@@ -50,14 +55,14 @@ void ghack_text_window_display(GtkWidget *widget, boolean block,
 	gtk_widget_show (GTK_WIDGET ( RIP));
 	gtk_window_set_title(GTK_WINDOW( TW_window), "Rest In Peace");
     }
-   
+
     gtk_signal_connect (GTK_OBJECT (TW_window), "destroy",
 	(GtkSignalFunc) ghack_text_window_destroy, NULL);
     if (block)
 	gnome_dialog_run(GNOME_DIALOG(TW_window));
     else
 	gnome_dialog_run_and_close(GNOME_DIALOG(TW_window));
-    
+
     if(showRIP == 1) {
 	showRIP = 0;
 	gtk_widget_hide (GTK_WIDGET ( RIP));
@@ -68,12 +73,22 @@ void ghack_text_window_display(GtkWidget *widget, boolean block,
 void ghack_text_window_put_string(GtkWidget *widget, int attr,
                                   const char* text, gpointer data)
 {
+    GtkTextBuffer *gbuffer;
+    GtkTextIter giter;
+
     if(text == NULL)
         return;
-    
+
+    g_assert (gless != NULL);
+    gbuffer = gtk_text_view_get_buffer (gless);
+    g_assert (gbuffer != NULL);
+
+    /* End position */
+    gtk_text_buffer_get_end_iter (gbuffer, &giter);
+
     /* Don't bother with attributes yet */
-    gtk_text_insert (GTK_TEXT (gless->text), NULL, NULL, NULL, text, -1);
-    gtk_text_insert (GTK_TEXT (gless->text), NULL, NULL, NULL, "\n", -1);
+    gtk_text_buffer_insert (gbuffer, &giter, text, -1);
+    gtk_text_buffer_insert (gbuffer, &giter, "\n", -1);
 }
 
 
@@ -82,12 +97,12 @@ GtkWidget* ghack_init_text_window ( )
     GtkWidget *pixmap;
     if(TW_window)
         return(GTK_WIDGET(TW_window));
-    
+
     TW_window = gnome_dialog_new("Text Window", GNOME_STOCK_BUTTON_OK, NULL);
     gtk_window_set_default_size( GTK_WINDOW(TW_window), 500, 400);
     gtk_window_set_policy(GTK_WINDOW(TW_window), TRUE, TRUE, FALSE);
     gtk_window_set_title(GTK_WINDOW(TW_window), "Text Window");
-    
+
     /* create GNOME pixmap object */
     pixmap = gnome_pixmap_new_from_xpm_d (rip_xpm);
     g_assert (pixmap != NULL);
@@ -98,7 +113,7 @@ GtkWidget* ghack_init_text_window ( )
     RIPlabel = gtk_label_new ("RIP");
     g_assert (RIPlabel != NULL);
     /* gtk_label_set_justify is broken? */
-    gtk_label_set_justify (GTK_LABEL (RIPlabel), GTK_JUSTIFY_CENTER); 
+    gtk_label_set_justify (GTK_LABEL (RIPlabel), GTK_JUSTIFY_CENTER);
     gtk_label_set_line_wrap (GTK_LABEL (RIPlabel), TRUE);
     gtk_widget_set_usize (RIPlabel, RIP_DRAW_WIDTH, RIP_DRAW_HEIGHT);
     gtk_widget_show (RIPlabel);
@@ -112,14 +127,14 @@ GtkWidget* ghack_init_text_window ( )
     gtk_widget_show (RIP);
     gtk_box_pack_start(GTK_BOX(GNOME_DIALOG(TW_window)->vbox), RIP,
                        TRUE, TRUE, 0);
-    
+
     /* create a gnome Less widget for the text stuff */
-    gless = GNOME_LESS (gnome_less_new ());
+    gless = gtk_text_view_new ();
     g_assert (gless != NULL);
     gtk_widget_show (GTK_WIDGET (gless));
-    gtk_box_pack_start(GTK_BOX(GNOME_DIALOG(TW_window)->vbox), 
+    gtk_box_pack_start(GTK_BOX(GNOME_DIALOG(TW_window)->vbox),
 	    GTK_WIDGET (gless), TRUE, TRUE, 0);
-    
+
     /* Hook up some signals */
     gtk_signal_connect(GTK_OBJECT(TW_window), "ghack_putstr",
 		    GTK_SIGNAL_FUNC(ghack_text_window_put_string),
@@ -134,7 +149,7 @@ GtkWidget* ghack_init_text_window ( )
                        NULL);
 
     /* Center the dialog over over parent */
-    gnome_dialog_set_parent( GNOME_DIALOG (TW_window), 
+    gnome_dialog_set_parent( GNOME_DIALOG (TW_window),
 	    GTK_WINDOW(ghack_get_main_window()) );
 
     gtk_window_set_modal( GTK_WINDOW(TW_window), TRUE);

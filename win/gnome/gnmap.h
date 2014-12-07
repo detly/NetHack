@@ -6,7 +6,7 @@
 #define GnomeHackMapWindow_h
 
 #include <gnome.h>
-#include <gdk_imlib.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 #include "config.h"
 #include "global.h"
 

@@ -109,11 +109,11 @@ ghack_menu_window_clear(GtkWidget *menuWin, gpointer data)
 	numRows = GPOINTER_TO_INT( gtk_object_get_data(
 		    GTK_OBJECT(clist), "numRows") );
 	for( i=0; i<numRows; i++) {
-	    item = (menuItem*) gtk_clist_get_row_data( 
+	    item = (menuItem*) gtk_clist_get_row_data(
 		    GTK_CLIST (clist), i);
 	    if (item != NULL) {
 		g_free( item);
-		gtk_clist_set_row_data (GTK_CLIST (clist), i, 
+		gtk_clist_set_row_data (GTK_CLIST (clist), i,
 			(gpointer) NULL);
 	    }
 	}
@@ -122,14 +122,18 @@ ghack_menu_window_clear(GtkWidget *menuWin, gpointer data)
 	gtk_clist_clear (GTK_CLIST (clist));
       }
     }
-    
-    else if (isMenu == MenuText) {
-      GnomeLess *gless;
 
-      gless = GNOME_LESS (gtk_object_get_data (GTK_OBJECT (menuWin), "gless"));
+    else if (isMenu == MenuText) {
+      GtkTextView *gless;
+      GtkTextBuffer *gbuffer;
+
+      gless = GTK_TEXT_VIEW (gtk_object_get_data (GTK_OBJECT (menuWin), "gless"));
       g_assert (gless != NULL);
 
-      gtk_editable_delete_text (GTK_EDITABLE (gless->text), 0, 0);
+      gbuffer = gtk_text_view_get_buffer(gless);
+      g_assert (gbuffer != NULL);
+
+      gtk_text_buffer_set_text(gbuffer, "", -1);
     }
 
 }
@@ -156,12 +160,12 @@ ghack_menu_hide( GtkWidget *menuWin, GdkEvent *event, gpointer data )
 }
 
 
-void 
+void
 ghack_menu_window_start_menu (GtkWidget *menuWin, gpointer data)
 {
     GtkWidget *frame1, *swin, *clist;
     MenuWinType isMenu;
-    
+
     g_assert (menuWin != NULL);
     g_assert (data == NULL);
 
@@ -169,7 +173,7 @@ ghack_menu_window_start_menu (GtkWidget *menuWin, gpointer data)
     frame1 = gtk_object_get_data (GTK_OBJECT (menuWin), "frame1");
     if (frame1)
       gtk_widget_destroy (frame1);
- 
+
     isMenu = MenuMenu;
     gtk_object_set_data (GTK_OBJECT (menuWin), "isMenu",
     			 GINT_TO_POINTER (isMenu));
@@ -184,7 +188,7 @@ ghack_menu_window_start_menu (GtkWidget *menuWin, gpointer data)
     gtk_container_set_border_width (GTK_CONTAINER (frame1), 5);
     gtk_box_pack_start (GTK_BOX (GNOME_DIALOG(menuWin)->vbox), frame1,
                         TRUE, TRUE, 0);
-    
+
     swin = gtk_scrolled_window_new (NULL, NULL);
     g_assert (swin != NULL);
     gtk_object_set_data (GTK_OBJECT(menuWin), "swin", swin);
@@ -204,11 +208,11 @@ ghack_menu_window_start_menu (GtkWidget *menuWin, gpointer data)
 	    GTK_SIGNAL_FUNC (ghack_menu_row_selected), NULL);
     gtk_object_set_data (GTK_OBJECT (clist), "numItems",
 			    GINT_TO_POINTER (-1));
-}    
+}
 
-    
-int 
-ghack_menu_window_select_menu (GtkWidget *menuWin, 
+
+int
+ghack_menu_window_select_menu (GtkWidget *menuWin,
 	MENU_ITEM_P **_selected, gint how)
 {
    gint rc;
@@ -232,9 +236,9 @@ ghack_menu_window_select_menu (GtkWidget *menuWin,
    g_assert (clist != NULL);
 
    gtk_object_set_data (GTK_OBJECT (clist), "selection_mode",
-                   GINT_TO_POINTER ((how == PICK_ANY)? 
+                   GINT_TO_POINTER ((how == PICK_ANY)?
 		       GTK_SELECTION_MULTIPLE : GTK_SELECTION_SINGLE));
-   gtk_clist_set_selection_mode (GTK_CLIST (clist), 
+   gtk_clist_set_selection_mode (GTK_CLIST (clist),
 	   (how == PICK_ANY)? GTK_SELECTION_MULTIPLE : GTK_SELECTION_SINGLE);
    gnome_dialog_close_hides (GNOME_DIALOG (menuWin), TRUE);
    rc = gnome_dialog_run_and_close (GNOME_DIALOG (menuWin));
@@ -268,9 +272,9 @@ ghack_menu_window_select_menu (GtkWidget *menuWin,
    *_selected = selected;
 
    return( (int) num_sel);
-}    
+}
 
-void 
+void
 ghack_menu_window_add_menu( GtkWidget *menuWin, gpointer menu_item,
 			    gpointer data)
 {
@@ -283,7 +287,9 @@ ghack_menu_window_add_menu( GtkWidget *menuWin, gpointer menu_item,
     MenuWinType isMenu;
     GtkStyle *bigStyle = NULL;
     gboolean item_selectable;
-    GdkImlibImage* image;
+    GdkPixbuf* image;
+    GdkPixmap* image_pixmap;
+    GdkBitmap* image_mask;
     static gboolean special;
 
     g_assert (menu_item != NULL);
@@ -294,7 +300,7 @@ ghack_menu_window_add_menu( GtkWidget *menuWin, gpointer menu_item,
 
     clist = GTK_WIDGET (gtk_object_get_data (GTK_OBJECT (menuWin), "clist"));
     g_assert (clist != NULL);
-    /* This is a special kludge to make the special hidden help menu item work as designed */ 
+    /* This is a special kludge to make the special hidden help menu item work as designed */
     if ( special==TRUE ) {
 	special=FALSE;
 	item_selectable=TRUE;
@@ -302,7 +308,7 @@ ghack_menu_window_add_menu( GtkWidget *menuWin, gpointer menu_item,
     if ( ! strcmp( item->str, "The NetHack license.")) {
 	special=TRUE;
     }
-    
+
     if (item->str) {
 
 	/* First, make a new blank entry in the clist */
@@ -310,20 +316,25 @@ ghack_menu_window_add_menu( GtkWidget *menuWin, gpointer menu_item,
 
 	if (item->glyph != NO_GLYPH) {
 	    image = ghack_image_from_glyph( item->glyph, FALSE);
-	    if (image==NULL || image->pixmap==NULL) {
+	    if (image==NULL) {
 		g_warning("Bummer -- having to force rendering for glyph %d!", item->glyph);
 		/* wierd -- pixmap is NULL so retry rendering it */
 		image = ghack_image_from_glyph( item->glyph, TRUE);
 	    }
-	    if (image==NULL || image->pixmap==NULL) {
-		    g_error("Aiiee! glyph is still NULL for item\n\"%s\"", 
+	    if (image==NULL) {
+		    g_error("Aiiee! glyph is still NULL for item\n\"%s\"",
 			    item->str);
 	    }
-	    else 
-		gtk_clist_set_pixmap (GTK_CLIST (clist), 
-			nCurrentRow, 1, 
-			gdk_imlib_move_image( image), 
-			gdk_imlib_move_mask( image));
+	    else {
+            gdk_pixbuf_render_pixmap_and_mask (image,
+                &image_pixmap,
+                &image_mask,
+                0);
+    		gtk_clist_set_pixmap (GTK_CLIST (clist),
+    			nCurrentRow, 1,
+    			image_pixmap,
+    			image_mask);
+        }
 	}
 	if (item->accelerator) {
 	    /* FIXME: handle accelerator, */
@@ -333,7 +344,7 @@ ghack_menu_window_add_menu( GtkWidget *menuWin, gpointer menu_item,
 	    gtk_clist_set_text (GTK_CLIST (clist), nCurrentRow, 2, buf);
 	} else {
 	    if (item->group_accel) {
-		/* FIXME: maybe some day I should try to handle 
+		/* FIXME: maybe some day I should try to handle
 		 * group accelerators... */
 	    }
 	    if (( (item->attr == 0) && (item->identifier->a_int != 0)) || (special ==TRUE) ) {
@@ -346,7 +357,7 @@ ghack_menu_window_add_menu( GtkWidget *menuWin, gpointer menu_item,
 		    gtk_clist_set_text(GTK_CLIST(clist), nCurrentRow, 0, accelBuf);
 		}
 		else if ( ('A'+numItems-26)<='Z') {
-		    g_snprintf(accelBuf, sizeof(accelBuf), "%c ", 'A'+numItems-26); 
+		    g_snprintf(accelBuf, sizeof(accelBuf), "%c ", 'A'+numItems-26);
 		    gtk_clist_set_text(GTK_CLIST(clist), nCurrentRow, 0, accelBuf);
 		} else {
 		    accelBuf[0] = buf[0] = 0;
@@ -386,7 +397,7 @@ ghack_menu_window_add_menu( GtkWidget *menuWin, gpointer menu_item,
 		    gtk_clist_set_text (GTK_CLIST (clist), nCurrentRow, 3, pbuf);
 		}
 		gtk_clist_set_text (GTK_CLIST (clist), nCurrentRow, 2, buf);
-		
+
 	    }
 	}
 
@@ -398,11 +409,11 @@ ghack_menu_window_add_menu( GtkWidget *menuWin, gpointer menu_item,
 		case ATR_INVERSE:
 		    bigStyle = gtk_style_copy (GTK_WIDGET (clist)->style);
 		    g_assert (bigStyle != NULL);
-		    gdk_font_unref (bigStyle->font);
-		    bigStyle->font = gdk_font_load (
-				"-misc-fixed-*-*-*-*-20-*-*-*-*-*-*-*");
+
+		    gtk_style_set_font(bigStyle, gdk_font_load (
+				"-misc-fixed-*-*-*-*-20-*-*-*-*-*-*-*"));
 		    bigStyle->fg[GTK_STATE_NORMAL] = color_blue;
-		    gtk_clist_set_cell_style (GTK_CLIST (clist), 
+		    gtk_clist_set_cell_style (GTK_CLIST (clist),
 			    nCurrentRow, 2, bigStyle);
 		    item_selectable = FALSE;
 	    }
@@ -417,17 +428,17 @@ ghack_menu_window_add_menu( GtkWidget *menuWin, gpointer menu_item,
 	    /* pre-select this item */
 	    gtk_clist_select_row( GTK_CLIST (clist), nCurrentRow, 0);
 	}
-	
+
 	gtk_object_set_data (GTK_OBJECT (clist), "numRows",
 		                GINT_TO_POINTER (nCurrentRow));
-        
+
 	/* We have to allocate memory here, since the menu_item currently
-	 * lives on the stack, and will otherwise go to the great bit bucket 
-	 * in the sky as soon as this function exits, which would leave a 
-	 * pointer to crap in the row_data.  Use g_memdup to make a private, 
+	 * lives on the stack, and will otherwise go to the great bit bucket
+	 * in the sky as soon as this function exits, which would leave a
+	 * pointer to crap in the row_data.  Use g_memdup to make a private,
 	 * persistant copy of the item identifier.
 	 *
-	 * We need to arrange to blow away this memory somewhere (like 
+	 * We need to arrange to blow away this memory somewhere (like
 	 * ghack_menu_destroy and ghack_menu_window_clear for example).
 	 *
 	 *  -Erik
@@ -435,7 +446,7 @@ ghack_menu_window_add_menu( GtkWidget *menuWin, gpointer menu_item,
 	{
 	    menuItem newItem;
 	    menuItem *pNewItem;
-	    
+
 	    newItem.identifier = *item->identifier;
 	    newItem.itemNumber=nCurrentRow;
 	    newItem.selected=FALSE;
@@ -473,25 +484,31 @@ ghack_menu_window_end_menu (GtkWidget *menuWin, gpointer data)
 void ghack_menu_window_put_string(GtkWidget *menuWin, int attr,
                                   const char* text, gpointer data)
 {
-    GnomeLess *gless;
+    GtkTextView *gless;
+    GtkTextBuffer *gbuffer;
+    GtkTextIter giter;
+
     MenuWinType isMenu;
 
     if (text == NULL)
         return;
-    
+
     isMenu = (MenuWinType) GPOINTER_TO_INT
     	(gtk_object_get_data (GTK_OBJECT (menuWin), "isMenu"));
 
     if (isMenu == MenuText) {
-      gless = GNOME_LESS (gtk_object_get_data (GTK_OBJECT (menuWin), "gless"));
+      gless = GTK_TEXT_VIEW (gtk_object_get_data (GTK_OBJECT (menuWin), "gless"));
       g_assert (gless != NULL);
-      g_assert (gless->text != NULL);
-      g_assert (GTK_IS_TEXT (gless->text));
+
+      gbuffer = gtk_text_view_get_buffer(gless);
+      g_assert (gbuffer != NULL);
+
+      /* End position */
+      gtk_text_buffer_get_end_iter (gbuffer, &giter);
 
       /* Don't bother with attributes yet */
-      gtk_text_insert (GTK_TEXT (gless->text), NULL, NULL, NULL, text, -1);
-      gtk_text_insert (GTK_TEXT (gless->text), NULL, NULL, NULL, "\n", -1);
-
+      gtk_text_buffer_insert (gbuffer, &giter, text, -1);
+      gtk_text_buffer_insert (gbuffer, &giter, "\n", -1);
     }
 
     else if (isMenu == MenuUnknown) {
@@ -501,14 +518,16 @@ void ghack_menu_window_put_string(GtkWidget *menuWin, int attr,
 
       gtk_widget_set_usize (GTK_WIDGET (menuWin), 500, 400);
       gtk_window_set_policy (GTK_WINDOW (menuWin), TRUE, TRUE, FALSE);
-    
-      gless = GNOME_LESS (gnome_less_new ());
+
+      gless = GTK_TEXT_VIEW (gtk_text_view_new ());
       g_assert (gless != NULL);
       gtk_object_set_data (GTK_OBJECT (menuWin), "gless", gless);
       gtk_widget_show (GTK_WIDGET (gless));
 
-      gnome_less_show_string (gless, text);
-      gtk_text_insert (GTK_TEXT (gless->text), NULL, NULL, NULL, "\n", -1);
+      gbuffer = gtk_text_view_get_buffer (gless);
+      g_assert (gbuffer != NULL);
+
+      gtk_text_buffer_set_text (gbuffer, text, -1);
 
       gtk_box_pack_start (GTK_BOX (GNOME_DIALOG (menuWin)->vbox),
       			  GTK_WIDGET (gless), TRUE, TRUE, 0);
@@ -525,17 +544,15 @@ ghack_menu_destroy (GtkWidget *menuWin, gpointer data)
     	(gtk_object_get_data (GTK_OBJECT (menuWin), "isMenu"));
 
     if (isMenu == MenuText) {
-      GnomeLess *gless;
+      GtkTextView *gless;
 
-      gless = GNOME_LESS (gtk_object_get_data (GTK_OBJECT (menuWin), "gless"));
+      gless = GTK_TEXT_VIEW (gtk_object_get_data (GTK_OBJECT (menuWin), "gless"));
       g_assert (gless != NULL);
-      g_assert (gless->text != NULL);
-      g_assert (GTK_IS_TEXT (gless->text));
       gtk_widget_destroy(GTK_WIDGET(gless));
     }
 
     else if (isMenu == MenuMenu) {
-      GtkWidget *frame1, *swin, *clist; 
+      GtkWidget *frame1, *swin, *clist;
 
       /* destroy existing menu data, if any */
       clist = gtk_object_get_data (GTK_OBJECT (menuWin), "clist");
@@ -546,11 +563,11 @@ ghack_menu_destroy (GtkWidget *menuWin, gpointer data)
 	numRows = GPOINTER_TO_INT( gtk_object_get_data(
 		    GTK_OBJECT(clist), "numRows") );
 	for( i=0; i<numRows; i++) {
-	    item = (menuItem*) gtk_clist_get_row_data( 
+	    item = (menuItem*) gtk_clist_get_row_data(
 		    GTK_CLIST (clist), i);
 	    if (item != NULL) {
 		g_free( item);
-		gtk_clist_set_row_data (GTK_CLIST (clist), i, 
+		gtk_clist_set_row_data (GTK_CLIST (clist), i,
 			(gpointer) NULL);
 	    }
 	}
@@ -568,7 +585,7 @@ ghack_menu_destroy (GtkWidget *menuWin, gpointer data)
 	gtk_widget_destroy (frame1);
       }
     }
-    gnome_delete_nhwindow_by_reference (menuWin);    
+    gnome_delete_nhwindow_by_reference (menuWin);
 }
 
 
@@ -578,9 +595,9 @@ ghack_init_menu_window (void)
     GtkWidget *menuWin = NULL;
     GtkWidget *parent = ghack_get_main_window ();
 
-    menuWin = gnome_dialog_new("GnomeHack", GNOME_STOCK_BUTTON_OK, 
+    menuWin = gnome_dialog_new("GnomeHack", GNOME_STOCK_BUTTON_OK,
 		    GNOME_STOCK_BUTTON_CANCEL, NULL);
-    
+
     gnome_dialog_set_default( GNOME_DIALOG(menuWin), 0);
     gtk_signal_connect(GTK_OBJECT(menuWin), "destroy",
 		    GTK_SIGNAL_FUNC(ghack_menu_destroy),
@@ -589,7 +606,7 @@ ghack_init_menu_window (void)
     gtk_signal_connect (GTK_OBJECT (menuWin), "delete_event",
 			GTK_SIGNAL_FUNC (ghack_menu_hide),
 			NULL);
-          
+
     gtk_signal_connect(GTK_OBJECT(menuWin), "ghack_clear",
 		    GTK_SIGNAL_FUNC(ghack_menu_window_clear),
 		    NULL);
@@ -628,7 +645,7 @@ ghack_init_menu_window (void)
     g_assert (GTK_IS_WINDOW (parent));
     g_assert (GNOME_IS_DIALOG (menuWin));
     gnome_dialog_set_parent (GNOME_DIALOG (menuWin), GTK_WINDOW (parent));
-    
+
     return menuWin;
 }
 
@@ -667,7 +684,7 @@ ghack_ext_key_hit(GtkWidget *menuWin, GdkEventKey *event, gpointer data)
 	    }
 	}
     }
-		
+
 init_state:
     /* reset to initial state, look for matching 1st character */
     for (i = 0; i < info->numRows; ++i) {

@@ -32,7 +32,7 @@ REAL_BUILD_STAMP_FILE = real-build
 
 # These flags were originally DEB_CFLAGS, etc. and used the 'dpkg-buildflags'
 # command instead of being verbatim flags.
-CUSTOM_CFLAGS   := -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat \
+CUSTOM_CFLAGS   := -g3 -O0 -fstack-protector --param=ssp-buffer-size=4 -Wformat \
                    -Werror=format-security -Wall
 CUSTOM_CPPFLAGS := -D_FORTIFY_SOURCE=2
 CUSTOM_LDFLAGS  := -Wl,-Bsymbolic-functions -Wl,-z,relro
@@ -47,6 +47,7 @@ $(REAL_BUILD_STAMP_FILE): $(TEMP_MAKEFILE)
 	+$(call build_target,console)
 	+$(call build_target,x11)
 	+$(call build_target,lisp)
+	+$(call build_target,gtk)
 	touch src/nethack.dummy ; sleep 2
 	$(MAKE) -f $(TEMP_MAKEFILE) -j1 \
 	  LFLAGS='$(LFLAGS)' CFLAGS='$(CFLAGS) -DUSE_XPM' \
@@ -57,7 +58,7 @@ $(REAL_BUILD_STAMP_FILE): $(TEMP_MAKEFILE)
 	$(MAKE) -C util LFLAGS='$(LFLAGS)' CFLAGS='$(CFLAGS)' recover
 	touch $@
 
-TARGETS = console lisp x11
+TARGETS = console lisp x11 gtk
 
 # The binaries are built by the makefile in the 'src' directory (note the -C
 # option to the second make invocation).
@@ -87,6 +88,22 @@ SRC_lisp = $$(WINLISPSRC)
 OBJ_lisp = $$(WINLISPOBJ)
 LIB_lisp = $$(WINLISPLIB)
 EXTRACPP_lisp = -DLISP_GRAPHICS -DDEFAULT_WINDOW_SYS=\"lisp\"
+
+SRC_gtk = $$(WINTTYSRC) $$(WINGNOMESRC)
+OBJ_gtk = $$(WINTTYOBJ) $$(WINGNOMEOBJ)
+LIB_gtk = -lgnomeui-2 -lgnome-2 -lart_lgpl_2 -lgtk-x11-2.0 -lgdk-x11-2.0 \
+          -lgnomecanvas-2 -lgdk_pixbuf-2.0 -lgobject-2.0 -lglib-2.0 -ldl \
+          -lncurses -lpopt
+EXTRACPP_gtk = -I/usr/include/libgnomeui-2.0 -I/usr/include/libgnome-2.0 \
+               -I/usr/include/gtk-2.0 -I/usr/include/glib-2.0 \
+               -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include \
+               -I/usr/include/atk-1.0 -I/usr/include/cairo \
+               -I/usr/include/pango-1.0 -I/usr/include/gdk-pixbuf-2.0 \
+               -I/usr/include/libbonobo-2.0 -I/usr/include/libbonoboui-2.0 \
+               -I/usr/include/libgnomecanvas-2.0 -I/usr/include/libart-2.0 \
+               -I/usr/include/gnome-vfs-2.0 \
+               -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -DGNOME_GRAPHICS \
+               -DGTK_ENABLE_BROKEN
 
 # These are the commands that would be run by invoking 'sys/unix/setup.sh 1',
 # except that the top level makefile is specifically marked as a temporary file.
