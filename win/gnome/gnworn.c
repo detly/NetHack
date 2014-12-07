@@ -43,6 +43,9 @@ ghack_init_worn_window()
     GtkWidget *table;
     GtkWidget *tablealign;
     GtkWidget *label;
+    GdkPixmap *image_pixmap;
+    GdkBitmap *image_mask;
+
     int i,j;
 
     top = gtk_vbox_new(FALSE, 2);
@@ -50,8 +53,11 @@ ghack_init_worn_window()
     table = gtk_table_new(WORN_HEIGHT, WORN_WIDTH, TRUE);
     for (i = 0; i < WORN_HEIGHT; i++) {
 	for (j = 0; j < WORN_WIDTH; j++) {
-	    worn_contents[i][j] =
-		gnome_pixmap_new_from_imlib(image_of_worn_object(NULL));
+        gdk_pixbuf_render_pixmap_and_mask (image_of_worn_object(NULL),
+            &image_pixmap,
+            &image_mask,
+            0);
+        worn_contents[i][j] = gtk_pixmap_new(image_pixmap, image_mask);
 	    last_worn_objects[i][j] = NULL; /* a pointer that will never be */
 	    gtk_table_attach(GTK_TABLE(table), GTK_WIDGET(worn_contents[i][j]),
 			     j, j+1, i, i+1, 0, 0, 0, 0);
@@ -90,6 +96,9 @@ image_of_worn_object(struct obj *o)
 void
 ghack_worn_display(GtkWidget *win, boolean block, gpointer data)
 {
+    GdkPixmap *image_pixmap;
+    GdkBitmap *image_mask;
+
     int i, j;
     struct obj *worn_objects[WORN_HEIGHT][WORN_WIDTH] = WORN_OBJECT_LIST;
 
@@ -97,8 +106,11 @@ ghack_worn_display(GtkWidget *win, boolean block, gpointer data)
 	for (j = 0; j < WORN_WIDTH; j++) {
 	    if (worn_objects[i][j] != last_worn_objects[i][j]) {
 		last_worn_objects[i][j] = worn_objects[i][j];
-		gnome_pixmap_load_imlib(GNOME_PIXMAP(worn_contents[i][j]),
-				image_of_worn_object(worn_objects[i][j]));
+        gdk_pixbuf_render_pixmap_and_mask (image_of_worn_object(worn_objects[i][j]),
+            &image_pixmap,
+            &image_mask,
+            0);
+        worn_contents[i][j] = gtk_pixmap_new(image_pixmap, image_mask);
 	    }
 	}
     }
