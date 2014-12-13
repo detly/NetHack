@@ -30,6 +30,8 @@ TEMP_MAKEFILE = temp-makefile
 # existence tells GNU make that the target has been built, and when).
 REAL_BUILD_STAMP_FILE = real-build
 
+GAME_DATA = x11tiles pet_mark.xbm rip.xpm mapbg.xpm
+
 # These flags were originally DEB_CFLAGS, etc. and used the 'dpkg-buildflags'
 # command instead of being verbatim flags.
 CUSTOM_CFLAGS   := -g3 -O0 -fstack-protector --param=ssp-buffer-size=4 -Wformat \
@@ -52,7 +54,7 @@ $(REAL_BUILD_STAMP_FILE): $(TEMP_MAKEFILE)
 	$(MAKE) -f $(TEMP_MAKEFILE) -j1 \
 	  LFLAGS='$(LFLAGS)' CFLAGS='$(CFLAGS) -DUSE_XPM' \
 	  GAME=src/nethack.dummy \
-	  VARDATND="x11tiles pet_mark.xbm rip.xpm mapbg.xpm" \
+	  VARDATND="$(GAME_DATA)" \
 	  Guidebook data oracles options quest.dat rumors dungeon spec_levs \
 	  check-dlb x11tiles pet_mark.xbm rip.xpm mapbg.xpm
 	$(MAKE) -C util LFLAGS='$(LFLAGS)' CFLAGS='$(CFLAGS)' recover
@@ -103,7 +105,25 @@ EXTRACPP_gtk = -I/usr/include/libgnomeui-2.0 -I/usr/include/libgnome-2.0 \
                -I/usr/include/libgnomecanvas-2.0 -I/usr/include/libart-2.0 \
                -I/usr/include/gnome-vfs-2.0 \
                -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -DGNOME_GRAPHICS \
+               -I../win/gnome \
                -DGTK_ENABLE_BROKEN
+
+# Create the read-only data area (ie. HACKDIR). The original Makefiles try to do
+# weird things with permissions; this assumes local usage. This also assumes the
+# use of the "nhdat" library file instead of the separate files.
+local-data-dir: $(REAL_BUILD_STAMP_FILE)
+	$(if $(strip $(LOCAL_DATADIR)), , \
+		$(error LOCAL_DATADIR must be specified) \
+	)
+	mkdir -p $(LOCAL_DATADIR)
+	touch $(LOCAL_DATADIR)/perm
+	cp -t $(LOCAL_DATADIR) dat/nhdat $(foreach datafile, $(GAME_DATA),dat/$(datafile))
+
+# Create the variable data area.
+local-var-dir: $(REAL_BUILD_STAMP_FILE)
+	$(if $(strip $(LOCAL_VARDIR)), , \
+		$(error LOCAL_VARDIR must be specified) \
+	)
 
 # These are the commands that would be run by invoking 'sys/unix/setup.sh 1',
 # except that the top level makefile is specifically marked as a temporary file.
@@ -135,4 +155,4 @@ clean: $(TEMP_MAKEFILE)
 # check-dlb target). This default target will simply pass through any unknown
 # targets to the temporary makefile.
 .DEFAULT:
-	$(MAKE) -f $(TEMP_MAKEFILE) $@
+	$(MAKE) -f $(TEMP_MAKEFILE) -j1 $@

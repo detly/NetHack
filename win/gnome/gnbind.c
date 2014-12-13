@@ -88,17 +88,39 @@ init_nhwindows(int* argcp, char** argv)
 */
 void gnome_init_nhwindows(int* argc, char** argv)
 {
+    static const char *X11_TILES = "/x11tiles";
+    char *dir;
+    char *tiles_path;
+    int init_glyphs_result;
+
     /* Main window */
     ghack_init_main_window( *argc, argv);
     ghack_init_signals( );
 
+    /* Get data directory */
+    dir = nh_getenv("NETHACKDIR");
+    if (!dir) dir = nh_getenv("HACKDIR");
+    if (!dir)
+    {
 #ifdef HACKDIR
-    //if (ghack_init_glyphs(HACKDIR "/t32-1024.xpm"))
-    if (ghack_init_glyphs(HACKDIR "/x11tiles"))
-      g_error ("ERROR:  Could not initialize glyphs.\n");
+        dir = HACKDIR;
 #else
-#   error HACKDIR is not defined!
+        g_error ("ERROR:  Could not find data directory.\n");
 #endif
+    }
+
+    tiles_path = alloc(strlen(dir) + strlen(X11_TILES) + 1);
+
+    if (!tiles_path) g_error ("ERROR: Not enough memory to load tiles.\n");
+
+    sprintf(tiles_path, "%s%s", dir, X11_TILES);
+
+    init_glyphs_result = ghack_init_glyphs(tiles_path);
+
+    free(tiles_path);
+
+    if (init_glyphs_result)
+      g_error ("ERROR:  Could not initialize glyphs.\n");
 
     // gnome/gtk is not reentrant
     set_option_mod_status("ignintr", DISP_IN_GAME);
@@ -884,7 +906,7 @@ raw_print(str)  -- Print directly to a screen, or otherwise guarantee that
 */
 void gnome_raw_print(const char *str)
 {
-    tty_raw_print(str);
+    g_warning ("WARNING: gnome_raw_print() should not be called");
 }
 
 /*
@@ -894,7 +916,7 @@ possible).
 */
 void gnome_raw_print_bold(const char *str)
 {
-    tty_raw_print_bold(str);
+    g_warning ("WARNING: gnome_raw_print_bold() should not be called");
 }
 
 /*
