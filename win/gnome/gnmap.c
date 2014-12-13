@@ -125,8 +125,8 @@ ghack_init_map_window ( )
   /* Canvas and scrollbars
   */
   ghack_map.canvas = GNOME_CANVAS (gnome_canvas_new());
-  //gtk_widget_push_visual(gdk_rgb_get_visual());
-  //gtk_widget_push_colormap(gdk_rgb_get_cmap());
+  // gtk_widget_push_visual(gdk_rgb_get_visual());
+  // gtk_widget_push_colormap(gdk_rgb_get_cmap());
   //ghack_map.canvas = GNOME_CANVAS (gnome_canvas_new_aa());
 
   gtk_widget_pop_colormap();
@@ -200,7 +200,7 @@ ghack_init_map_window ( )
 		      "height", (double) background_height,
                       "width-in-pixels", TRUE,
                       "height-in-pixels", TRUE,
-		      "image",  background,
+		      "pixbuf",  background,
 		      "anchor", (GtkAnchorType) GTK_ANCHOR_CENTER,
 		      NULL) );
 	  gnome_canvas_item_lower_to_bottom (GNOME_CANVAS_ITEM( bg));
@@ -255,7 +255,7 @@ ghack_init_map_window ( )
 			  "height", (double) gdk_pixbuf_get_height(petmark),
                           "width-in-pixels", TRUE,
                           "height-in-pixels", TRUE,
-			  "image",  petmark,
+			  "pixbuf",  petmark,
 			  "anchor", GTK_ANCHOR_NORTH_WEST,
 			  NULL) );
 	      gnome_canvas_item_lower_to_bottom (
@@ -415,7 +415,7 @@ ghack_map_print_glyph( GtkObject *win,
   group = gnome_canvas_root (GNOME_CANVAS (ghack_map.canvas));
 
   gnome_canvas_item_set (GNOME_CANVAS_ITEM ( canvas_image),
-			 "image",  im, NULL);
+			 "pixbuf",  im, NULL);
   gnome_canvas_item_show( GNOME_CANVAS_ITEM( canvas_image));
 
   canvas_image = GNOME_CANVAS_PIXBUF( ghack_map.overlay[i]);
@@ -569,7 +569,7 @@ ghack_reinit_map_window ( )
 		      "height", (double) background_height,
                       "width-in-pixels", TRUE,
                       "height-in-pixels", TRUE,
-		      "image",  background,
+		      "pixbuf",  background,
 		      "anchor", (GtkAnchorType) GTK_ANCHOR_CENTER,
 		      NULL) );
 	  gnome_canvas_item_lower_to_bottom (GNOME_CANVAS_ITEM( bg));
@@ -615,7 +615,7 @@ ghack_reinit_map_window ( )
 			  "height", (double) gdk_pixbuf_get_height(petmark),
                           "width-in-pixels", TRUE,
                           "height-in-pixels", TRUE,
-			  "image",  petmark,
+			  "pixbuf",  petmark,
 			  "anchor", GTK_ANCHOR_NORTH_WEST,
 			  NULL) );
 	      gnome_canvas_item_lower_to_bottom (

@@ -129,7 +129,7 @@ GtkWidget* ghack_init_text_window ( )
                        TRUE, TRUE, 0);
 
     /* create a gnome Less widget for the text stuff */
-    gless = gtk_text_view_new ();
+    gless = GTK_TEXT_VIEW(gtk_text_view_new ());
     g_assert (gless != NULL);
     gtk_widget_show (GTK_WIDGET (gless));
     gtk_box_pack_start(GTK_BOX(GNOME_DIALOG(TW_window)->vbox),
