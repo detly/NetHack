@@ -200,7 +200,7 @@ ghack_init_map_window ( )
 		      "height", (double) background_height,
                       "width-in-pixels", TRUE,
                       "height-in-pixels", TRUE,
-		      "pixbuf",  background,
+                      "pixbuf", background,
 		      "anchor", (GtkAnchorType) GTK_ANCHOR_CENTER,
 		      NULL) );
 	  gnome_canvas_item_lower_to_bottom (GNOME_CANVAS_ITEM( bg));
@@ -416,6 +416,7 @@ ghack_map_print_glyph( GtkObject *win,
 
   gnome_canvas_item_set (GNOME_CANVAS_ITEM ( canvas_image),
 			 "pixbuf",  im, NULL);
+
   gnome_canvas_item_show( GNOME_CANVAS_ITEM( canvas_image));
 
   canvas_image = GNOME_CANVAS_PIXBUF( ghack_map.overlay[i]);
@@ -466,7 +467,6 @@ ghack_map_clear( GtkWidget *win, gpointer data)
 	  gnome_canvas_item_hide( GNOME_CANVAS_ITEM (ghack_map.overlay[i]));
 	}
     }
-  gnome_canvas_update_now ( GNOME_CANVAS(ghack_map.canvas));
 }
 
 
@@ -518,8 +518,6 @@ ghack_map_cliparound( GtkWidget *win,
 
   if (to_x != cur_x || to_y != cur_y)
     gnome_canvas_scroll_to( ghack_map.canvas, to_x, to_y);
-  //gnome_canvas_update_now ( ghack_map.canvas);
-
 }
 
 
