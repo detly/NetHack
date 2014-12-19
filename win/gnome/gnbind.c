@@ -906,7 +906,8 @@ raw_print(str)  -- Print directly to a screen, or otherwise guarantee that
 */
 void gnome_raw_print(const char *str)
 {
-    g_warning ("WARNING: gnome_raw_print() should not be called");
+    g_warning("Nethack raw print: %s", str);
+    abort();
 }
 
 /*
@@ -916,7 +917,7 @@ possible).
 */
 void gnome_raw_print_bold(const char *str)
 {
-    g_warning ("WARNING: gnome_raw_print_bold() should not be called");
+    gnome_raw_print(str);
 }
 
 /*
