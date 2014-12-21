@@ -35,10 +35,29 @@ opt_sel_row_selected(GtkCList *cList, int row, int col, GdkEvent *event)
 void
 ghack_settings_dialog()
 {
+    static const char *X11_TILES = "/x11tiles";
+    static const char *HR_TILES  = "/t32-1024.xpm";
+
     int i;
     static GtkWidget* dialog;
     static GtkWidget* swin;
     static GtkWidget* frame1;
+    char *hackdir;
+    char *tiles_name;
+    char *tiles_path;
+    int init_glyphs_result;
+
+    /* Get data directory */
+    hackdir = nh_getenv("NETHACKDIR");
+    if (!hackdir) hackdir = nh_getenv("HACKDIR");
+    if (!hackdir)
+    {
+#ifdef HACKDIR
+        hackdir = HACKDIR;
+#else
+        g_error("ERROR: Could not find data directory.\n");
+#endif
+    }
 
     dialog = gnome_dialog_new (_("GnomeHack Settings"),
 			    GNOME_STOCK_BUTTON_OK,
@@ -96,22 +115,31 @@ ghack_settings_dialog()
     switch (tileset) {
 	case 0:
 	    /* They selected traditional */
-	    ghack_free_glyphs();
-	    if (ghack_init_glyphs(HACKDIR "/x11tiles"))
-		      g_error ("ERROR:  Could not initialize glyphs.\n");
-	    ghack_reinit_map_window();
+        tiles_name = X11_TILES;
 	    break;
 	case 1:
-	    ghack_free_glyphs();
-	    if (ghack_init_glyphs(HACKDIR "/t32-1024.xpm"))
-		      g_error ("ERROR:  Could not initialize glyphs.\n");
-	    ghack_reinit_map_window();
-
-	    /* They selected big */
+        /* They selected big */
+        tiles_name = HR_TILES;
 	    break;
 	default:
 	    /* This shouldn't happen */
-	    g_warning("This shouldn't happen\n");
+        tiles_name = NULL;
+	    g_error("This shouldn't happen\n");
+    }
+
+    if (tiles_name)
+    {
+        tiles_path = alloc(strlen(hackdir) + strlen(tiles_name) + 1);
+        sprintf(tiles_path, "%s%s", hackdir, tiles_name);
+
+        ghack_free_glyphs();
+        init_glyphs_result = ghack_init_glyphs(tiles_path);
+
+        free(tiles_path);
+
+        if (init_glyphs_result)
+              g_error ("ERROR:  Could not initialize glyphs.\n");
+        ghack_reinit_map_window();
     }
 }
 
