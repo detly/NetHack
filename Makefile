@@ -148,15 +148,16 @@ clean-local-var-dir:
 	fi
 
 # These are the commands that would be run by invoking 'sys/unix/setup.sh 1'
-# except that the top level makefile is specifically marked as a temporary file.
-# This assumes that symlinks are available.
+# (back before it was linuxland), except that the top level makefile is
+# specifically marked as a temporary file. This assumes that symlinks are
+# available.
 $(TEMP_MAKEFILE):
 	umask 0
-	ln -s sys/unix/Makefile.top $@
-	ln -s ../sys/unix/Makefile.dat dat/Makefile
-	ln -s ../sys/unix/Makefile.doc doc/Makefile
-	ln -s ../sys/unix/Makefile.src src/Makefile
-	ln -s ../sys/unix/Makefile.utl util/Makefile
+	ln -s sys/linuxland/Makefile.top $@
+	ln -s ../sys/linuxland/Makefile.dat dat/Makefile
+	ln -s ../sys/linuxland/Makefile.doc doc/Makefile
+	ln -s ../sys/linuxland/Makefile.src src/Makefile
+	ln -s ../sys/linuxland/Makefile.utl util/Makefile
 
 # It might seem strange to have the 'clean' target depend upon another target,
 # but lower-level makefiles test for the existence of "Makefile" in the top

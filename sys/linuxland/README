@@ -1,0 +1,9 @@
+# Linux Userland Nethack
+
+This port is designed so:
+  - A user can build, install and run it without system-wide access
+  - A user can run it with the read-only data in one location and the variable
+    parts in another
+  - Multiple instances can be run simultaneously, with the same read-only
+    location and different variable data locations
+  - Email and shell access are denied
