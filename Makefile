@@ -110,22 +110,44 @@ EXTRACPP_gtk = -I/usr/include/libgnomeui-2.0 -I/usr/include/libgnome-2.0 \
 
 # Create the read-only data area (ie. HACKDIR). The original Makefiles try to do
 # weird things with permissions; this assumes local usage. This also assumes the
-# use of the "nhdat" library file instead of the separate files.
+# use of the data librarian "nhdat" file instead of the separate files.
 local-data-dir: $(REAL_BUILD_STAMP_FILE)
 	$(if $(strip $(LOCAL_DATADIR)), , \
 		$(error LOCAL_DATADIR must be specified) \
 	)
+
 	mkdir -p $(LOCAL_DATADIR)
-	touch $(LOCAL_DATADIR)/perm
-	cp -t $(LOCAL_DATADIR) dat/nhdat $(foreach datafile, $(GAME_DATA),dat/$(datafile))
+	cp -t $(LOCAL_DATADIR) dat/nhdat $(foreach datafile,$(GAME_DATA),dat/$(datafile))
+	chmod -R a-w $(LOCAL_DATADIR)
+
+clean-local-data-dir:
+	if [ -n "$(LOCAL_DATADIR)" -a -d $(LOCAL_DATADIR) ] ; then \
+	    chmod -R a+w $(LOCAL_DATADIR) ;\
+	    rm -f $(LOCAL_DATADIR)/nhdat $(foreach datafile,$(GAME_DATA),$(LOCAL_DATADIR)/$(datafile)) ;\
+	    rmdir $(LOCAL_DATADIR) ;\
+	fi
 
 # Create the variable data area.
 local-var-dir: $(REAL_BUILD_STAMP_FILE)
 	$(if $(strip $(LOCAL_VARDIR)), , \
 		$(error LOCAL_VARDIR must be specified) \
 	)
+	mkdir -p $(LOCAL_VARDIR)
+	mkdir -p $(LOCAL_VARDIR)/save
+	touch $(LOCAL_VARDIR)/record
+	touch $(LOCAL_VARDIR)/perm
+	touch $(LOCAL_VARDIR)/logfile
 
-# These are the commands that would be run by invoking 'sys/unix/setup.sh 1',
+clean-local-var-dir:
+	if [ -n "$(LOCAL_VARDIR)" -a -d $(LOCAL_VARDIR) ] ; then \
+	    rm -fr $(LOCAL_VARDIR)/save ;\
+	    rm -f $(LOCAL_VARDIR)/record ;\
+	    rm -f $(LOCAL_VARDIR)/perm ;\
+	    rm -f $(LOCAL_VARDIR)/logfile ;\
+	    rmdir $(LOCAL_VARDIR) ;\
+	fi
+
+# These are the commands that would be run by invoking 'sys/unix/setup.sh 1'
 # except that the top level makefile is specifically marked as a temporary file.
 # This assumes that symlinks are available.
 $(TEMP_MAKEFILE):
@@ -140,7 +162,7 @@ $(TEMP_MAKEFILE):
 # but lower-level makefiles test for the existence of "Makefile" in the top
 # level and call it to do cleaning tasks. In this case, that means passing
 # through to $(TEMP_MAKEFILE).
-clean: $(TEMP_MAKEFILE)
+clean: clean-local-var-dir clean-local-data-dir $(TEMP_MAKEFILE)
 	rm -f $(REAL_BUILD_STAMP_FILE)
 	rm -f nh10.pcf*
 	rm -f $(patsubst %,src/nethack.%,$(TARGETS) dummy)
