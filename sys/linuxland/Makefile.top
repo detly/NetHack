@@ -40,7 +40,7 @@ VARDIR  = $(GAMEDIR)
 SHELLDIR = $(PREFIX)/games
 
 # per discussion in Install.X11 and Install.Qt
-VARDATND = 
+VARDATND =
 # VARDATND = x11tiles NetHack.ad pet_mark.xbm
 # VARDATND = x11tiles NetHack.ad pet_mark.xbm rip.xpm
 # for Atari/Gem
