@@ -49,7 +49,7 @@ gid_t *rgid, *egid, *sgid;
 }
 
 # else
-#  if defined(BSD) || defined(SVR4)
+# if defined(SVR4)
 
 #   ifdef SYS_getresuid
 

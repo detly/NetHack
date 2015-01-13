@@ -39,11 +39,7 @@ int fd;
 #ifndef INSURANCE
 	if(buf.st_size != sizeof(int)) return(0);	/* not an xlock file */
 #endif
-#if defined(BSD) && !defined(POSIX_TYPES)
-	(void) time((long *)(&date));
-#else
 	(void) time(&date);
-#endif
 	if(date - buf.st_mtime < 3L*24L*60L*60L) {	/* recent */
 		int lockedpid;	/* should be the same size as hackpid */
 

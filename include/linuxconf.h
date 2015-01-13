@@ -166,7 +166,7 @@
 /* #define NO_MAILREADER */	/* have mail daemon just tell player of mail */
 
 #ifdef MAIL
-# if defined(BSD) || defined(ULTRIX)
+# if defined(ULTRIX)
 #  ifdef AMS
 #define AMS_MAILBOX	"/Mailbox"
 #  else
@@ -235,7 +235,7 @@
  * various recent SYSV versions (with possibly tweaks to unixtty.c again).
  */
 #ifndef POSIX_JOB_CONTROL
-# if defined(BSD) || defined(ULTRIX) || defined(HPUX) || defined(AIX_31)
+# if defined(ULTRIX) || defined(HPUX) || defined(AIX_31)
 #  define BSD_JOB_CONTROL
 # else
 #  if defined(SVR4)
@@ -248,7 +248,7 @@
 #endif
 
 
-#if defined(BSD) || defined(ULTRIX)
+#if defined(ULTRIX)
 #include <sys/time.h>
 #else
 #include <time.h>
@@ -270,11 +270,11 @@
 #include <unistd.h>
 #endif
 
-#if defined(POSIX_TYPES) || defined(__GNUC__) || defined(BSD) || defined(ULTRIX)
+#if defined(POSIX_TYPES) || defined(__GNUC__) || defined(ULTRIX)
 #include <sys/wait.h>
 #endif
 
-#if defined(BSD) || defined(ULTRIX)
+#if defined(ULTRIX)
 # if !defined(DGUX) && !defined(SUNOS4)
 #define memcpy(d, s, n)		bcopy(s, d, n)
 #define memcmp(s1, s2, n)	bcmp(s2, s1, n)
@@ -292,14 +292,14 @@
 #endif
 
 /* Use the high quality random number routines. */
-#if defined(BSD) || defined(LINUX) || defined(ULTRIX) || defined(CYGWIN32) || defined(RANDOM)
+#if defined(LINUX) || defined(ULTRIX) || defined(CYGWIN32) || defined(RANDOM)
 #define Rand()	random()
 #else
 #define Rand()	lrand48()
 #endif
 
 #ifdef TIMED_DELAY
-# if defined(SUNOS4) || defined(LINUX) || (defined(BSD) && !defined(ULTRIX))
+# if defined(SUNOS4) || defined(LINUX)
 # define msleep(k) usleep((k)*1000)
 # endif
 # ifdef ULTRIX
@@ -322,7 +322,7 @@
 #  define GETRES_SUPPORT
 # endif
 #else
-# if defined(BSD) || defined(SVR4)
+# if defined(SVR4)
 /*
  * [ALI] We assume that SVR4 means we can safely include syscall.h
  * (although it's really a BSDism). This is certainly true for Solaris 2.5,
