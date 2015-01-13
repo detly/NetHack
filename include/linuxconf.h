@@ -184,11 +184,7 @@
 #  if defined(M_XENIX)
 #define DEF_MAILREADER	"/usr/bin/mail"
 #  else
-#   ifdef __sgi
-#define DEF_MAILREADER	"/usr/sbin/Mail"
-#   else
 #define DEF_MAILREADER	"/usr/bin/mailx"
-#   endif
 #  endif
 # else
 /* Debian mail reader is /usr/bin/mail, not /bin/mail */
