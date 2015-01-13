@@ -173,7 +173,7 @@
 #  ifdef AMS
 #define AMS_MAILBOX	"/Mailbox"
 #  else
-# if defined(__OpenBSD__) || defined(__FreeBSD_kernel__)
+# if defined(__FreeBSD_kernel__)
 #define DEF_MAILREADER	"/usr/bin/mail"
 #   else
 #define DEF_MAILREADER	"/usr/ucb/Mail"
