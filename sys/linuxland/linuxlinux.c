@@ -8,9 +8,7 @@
 
 #include <errno.h>
 #include <sys/stat.h>
-#if defined(NO_FILE_LINKS) || defined(POSIX_TYPES)
 #include <fcntl.h>
-#endif
 #include <signal.h>
 
 extern void NDECL(linux_mapon);

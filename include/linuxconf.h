@@ -169,9 +169,6 @@
  */
 
 
-# ifndef POSIX_TYPES
-#  define POSIX_TYPES
-# endif
 # ifndef POSIX_JOB_CONTROL
 #  define POSIX_JOB_CONTROL
 # endif
@@ -207,14 +204,10 @@
 
 #include "system.h"
 
-#if defined(POSIX_TYPES) || defined(__GNUC__)
 #include <stdlib.h>
 #include <unistd.h>
-#endif
 
-#if defined(POSIX_TYPES) || defined(__GNUC__)
 #include <sys/wait.h>
-#endif
 
 # ifndef index	/* some systems seem to do this for you */
 #define index	strchr
