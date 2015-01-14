@@ -166,7 +166,7 @@
 /* #define NO_MAILREADER */	/* have mail daemon just tell player of mail */
 
 #ifdef MAIL
-# if (defined(SYSV) || defined(DGUX) || defined(HPUX)) && !defined(LINUX)
+# if (defined(SYSV) || defined(HPUX)) && !defined(LINUX)
 #  if defined(M_XENIX)
 #define DEF_MAILREADER	"/usr/bin/mail"
 #  else
