@@ -187,29 +187,9 @@ register char *s;
 
 	while((lp=index(s, '.')) || (lp=index(s, '/')) || (lp=index(s,' ')))
 		*lp = '_';
-#if defined(SYSV) && !defined(LINUX)
-	/* avoid problems with 14 character file name limit */
-# ifdef COMPRESS
-	/* leave room for .e from error and .Z from compress appended to
-	 * save files */
-	{
-#  ifdef COMPRESS_EXTENSION
-	    int i = 12 - strlen(COMPRESS_EXTENSION);
-#  else
-	    int i = 10;		/* should never happen... */
-#  endif
-	    if(strlen(s) > i)
-		s[i] = '\0';
-	}
-# else
-	if(strlen(s) > 11)
-		/* leave room for .nn appended to level files */
-		s[11] = '\0';
-# endif
-#endif
 }
 
-#if defined(TIMED_DELAY) && !defined(msleep) && defined(SYSV)
+#if defined(TIMED_DELAY) && !defined(msleep)
 #include <poll.h>
 
 void

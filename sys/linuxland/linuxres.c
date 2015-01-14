@@ -18,7 +18,6 @@
 
 #ifdef GETRES_SUPPORT
 
-# if defined(LINUX)
 
 /* requires dynamic linking with libc */
 #define _GNU_SOURCE
@@ -48,8 +47,6 @@ gid_t *rgid, *egid, *sgid;
     return f(rgid, egid, sgid);
 }
 
-# else
-# endif		/* LINUX */
 
 static unsigned int hiding_privileges = 0;
 
