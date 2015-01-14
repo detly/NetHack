@@ -258,7 +258,7 @@
 #endif
 
 #ifdef TIMED_DELAY
-# if defined(SUNOS4) || defined(LINUX)
+# if defined(LINUX)
 # define msleep(k) usleep((k)*1000)
 # endif
 #endif
