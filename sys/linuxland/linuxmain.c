@@ -14,13 +14,11 @@
 #include <fcntl.h>
 #endif
 
-#if !defined(_BULL_SOURCE)
 # if defined(POSIX_TYPES)
 extern struct passwd *FDECL(getpwuid,(uid_t));
 #  else
 extern struct passwd *FDECL(getpwuid,(int));
 #  endif
-#endif
 extern struct passwd *FDECL(getpwnam,(const char *));
 #ifdef CHDIR
 static void FDECL(chdirx, (const char *,BOOLEAN_P));
