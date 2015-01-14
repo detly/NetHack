@@ -16,7 +16,7 @@
 
 #if !defined(_BULL_SOURCE) && !defined(_M_UNIX)
 # if !defined(SUNOS4)
-# if defined(POSIX_TYPES) || defined(SVR4)
+# if defined(POSIX_TYPES)
 extern struct passwd *FDECL(getpwuid,(uid_t));
 #  else
 extern struct passwd *FDECL(getpwuid,(int));

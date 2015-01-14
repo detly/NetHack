@@ -227,9 +227,6 @@
  * various recent SYSV versions (with possibly tweaks to unixtty.c again).
  */
 #ifndef POSIX_JOB_CONTROL
-#  if defined(SVR4)
-#   define POSIX_JOB_CONTROL
-#  endif
 #endif
 #if defined(BSD_JOB_CONTROL) || defined(POSIX_JOB_CONTROL) || defined(AUX)
 #define SUSPEND		/* let ^Z suspend the game */
@@ -293,19 +290,6 @@
 #  define GETRES_SUPPORT
 # endif
 #else
-# if defined(SVR4)
-/*
- * [ALI] We assume that SVR4 means we can safely include syscall.h
- * (although it's really a BSDism). This is certainly true for Solaris 2.5,
- * Solaris 7, Solaris 8 and Compaq Tru64 5.1
- * Later BSD systems will have the getresid system calls.
- */
-# include <sys/syscall.h>
-# if (defined (SYS_getuid) || defined(SYS_getresuid)) && \
-  (defined(SYS_getgid) || defined(SYS_getresgid))
-#  define GETRES_SUPPORT
-# endif
-# endif	/* BSD || SVR4 */
 #endif /* LINUX */
 #endif	/* GNOME_GRAPHICS */
 
