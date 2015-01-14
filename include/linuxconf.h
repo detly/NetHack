@@ -166,13 +166,6 @@
 /* #define NO_MAILREADER */	/* have mail daemon just tell player of mail */
 
 #ifdef MAIL
-# if defined(ULTRIX)
-#  ifdef AMS
-#define AMS_MAILBOX	"/Mailbox"
-#  else
-#define DEF_MAILREADER	"/usr/ucb/Mail"
-#  endif
-#else
 # if (defined(SYSV) || defined(DGUX) || defined(HPUX)) && !defined(LINUX)
 #  if defined(M_XENIX)
 #define DEF_MAILREADER	"/usr/bin/mail"
@@ -183,7 +176,6 @@
 /* Debian mail reader is /usr/bin/mail, not /bin/mail */
 #define DEF_MAILREADER	"/usr/bin/mail"
 # endif
-#endif
 
 #endif	/* MAIL */
 
@@ -235,7 +227,7 @@
  * various recent SYSV versions (with possibly tweaks to unixtty.c again).
  */
 #ifndef POSIX_JOB_CONTROL
-# if defined(ULTRIX) || defined(HPUX) || defined(AIX_31)
+# if defined(HPUX) || defined(AIX_31)
 #  define BSD_JOB_CONTROL
 # else
 #  if defined(SVR4)
@@ -248,11 +240,7 @@
 #endif
 
 
-#if defined(ULTRIX)
-#include <sys/time.h>
-#else
 #include <time.h>
-#endif
 
 #define HLOCK	"perm"	/* an empty file used for locking purposes */
 
@@ -270,29 +258,19 @@
 #include <unistd.h>
 #endif
 
-#if defined(POSIX_TYPES) || defined(__GNUC__) || defined(ULTRIX)
+#if defined(POSIX_TYPES) || defined(__GNUC__)
 #include <sys/wait.h>
 #endif
 
-#if defined(ULTRIX)
-# if !defined(DGUX) && !defined(SUNOS4)
-#define memcpy(d, s, n)		bcopy(s, d, n)
-#define memcmp(s1, s2, n)	bcmp(s2, s1, n)
-# endif
-# ifdef SUNOS4
-#include <memory.h>
-# endif
-#else	/* therefore SYSV */
 # ifndef index	/* some systems seem to do this for you */
 #define index	strchr
 # endif
 # ifndef rindex
 #define rindex	strrchr
 # endif
-#endif
 
 /* Use the high quality random number routines. */
-#if defined(LINUX) || defined(ULTRIX) || defined(CYGWIN32) || defined(RANDOM)
+#if defined(LINUX) || defined(CYGWIN32) || defined(RANDOM)
 #define Rand()	random()
 #else
 #define Rand()	lrand48()
@@ -301,9 +279,6 @@
 #ifdef TIMED_DELAY
 # if defined(SUNOS4) || defined(LINUX)
 # define msleep(k) usleep((k)*1000)
-# endif
-# ifdef ULTRIX
-# define msleep(k) napms(k)
 # endif
 #endif
 
