@@ -194,7 +194,7 @@
  */
 
 
-#if defined(LINUX) || defined(bsdi)
+#if defined(LINUX)
 # ifndef POSIX_TYPES
 #  define POSIX_TYPES
 # endif
