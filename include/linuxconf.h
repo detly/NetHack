@@ -169,9 +169,6 @@
  */
 
 
-# ifndef POSIX_JOB_CONTROL
-#  define POSIX_JOB_CONTROL
-# endif
 
 /*
  * BSD/ULTRIX systems are normally the only ones that can suspend processes.
@@ -184,11 +181,7 @@
  * equivalent for NetHack's purposes.  POSIX_JOB_CONTROL should work on
  * various recent SYSV versions (with possibly tweaks to unixtty.c again).
  */
-#ifndef POSIX_JOB_CONTROL
-#endif
-#if defined(BSD_JOB_CONTROL) || defined(POSIX_JOB_CONTROL) || defined(AUX)
 #define SUSPEND		/* let ^Z suspend the game */
-#endif
 
 
 #include <time.h>
