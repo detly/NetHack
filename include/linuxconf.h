@@ -167,11 +167,7 @@
 
 #ifdef MAIL
 # if defined(SYSV) && !defined(LINUX)
-#  if defined(M_XENIX)
-#define DEF_MAILREADER	"/usr/bin/mail"
-#  else
 #define DEF_MAILREADER	"/usr/bin/mailx"
-#  endif
 # else
 /* Debian mail reader is /usr/bin/mail, not /bin/mail */
 #define DEF_MAILREADER	"/usr/bin/mail"
