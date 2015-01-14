@@ -251,7 +251,7 @@
 # endif
 
 /* Use the high quality random number routines. */
-#if defined(LINUX) || defined(CYGWIN32) || defined(RANDOM)
+#if defined(LINUX) || defined(RANDOM)
 #define Rand()	random()
 #else
 #define Rand()	lrand48()
