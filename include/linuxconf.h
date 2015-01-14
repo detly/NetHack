@@ -166,7 +166,7 @@
 /* #define NO_MAILREADER */	/* have mail daemon just tell player of mail */
 
 #ifdef MAIL
-# if (defined(SYSV) || defined(HPUX)) && !defined(LINUX)
+# if defined(SYSV) && !defined(LINUX)
 #  if defined(M_XENIX)
 #define DEF_MAILREADER	"/usr/bin/mail"
 #  else
@@ -227,7 +227,7 @@
  * various recent SYSV versions (with possibly tweaks to unixtty.c again).
  */
 #ifndef POSIX_JOB_CONTROL
-# if defined(HPUX) || defined(AIX_31)
+# if defined(AIX_31)
 #  define BSD_JOB_CONTROL
 # else
 #  if defined(SVR4)
