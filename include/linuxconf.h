@@ -2,9 +2,8 @@
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /* NetHack may be freely redistributed.  See license for details. */
 
-#ifdef UNIX
-#ifndef UNIXCONF_H
-#define UNIXCONF_H
+#ifndef LINUXLANDCONF_H
+#define LINUXLANDCONF_H
 
 /*
  * Some include files are in a different place under SYSV
@@ -350,5 +349,4 @@
 #endif /* LINUX */
 #endif	/* GNOME_GRAPHICS */
 
-#endif /* UNIXCONF_H */
-#endif /* UNIX */
+#endif /* LINUXLANDCONF_H */
