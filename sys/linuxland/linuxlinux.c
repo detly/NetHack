@@ -13,10 +13,8 @@
 #endif
 #include <signal.h>
 
-#ifdef __linux__
 extern void NDECL(linux_mapon);
 extern void NDECL(linux_mapoff);
-#endif
 
 #ifndef NHSTDC
 extern int errno;
@@ -250,9 +248,7 @@ int wt;
 {
 	register int f;
 	suspend_nhwindows((char *)0);	/* also calls end_screen() */
-#ifdef __linux__
 	linux_mapon();
-#endif
 	if((f = fork()) == 0){		/* child */
 		(void) setgid(getgid());
 		(void) setuid(getuid());
@@ -269,9 +265,7 @@ int wt;
 	(void) signal(SIGINT,SIG_IGN);
 	(void) signal(SIGQUIT,SIG_IGN);
 	(void) wait( (int *) 0);
-#ifdef __linux__
 	linux_mapoff();
-#endif
 	(void) signal(SIGINT, (SIG_RET_TYPE) done1);
 #ifdef WIZARD
 	if(wizard) (void) signal(SIGQUIT,SIG_DFL);

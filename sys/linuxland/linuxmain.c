@@ -26,10 +26,8 @@ static void FDECL(chdirx, (const char *,BOOLEAN_P));
 static boolean NDECL(whoami);
 static void FDECL(process_options, (int, char **));
 
-#ifdef __linux__
 extern void NDECL(check_linux_console);
 extern void NDECL(init_linux_cons);
-#endif
 
 static void NDECL(wd_message);
 #ifdef WIZARD
@@ -115,15 +113,11 @@ char *argv[];
 	chdirx(dir,1);
 #endif
 
-#ifdef __linux__
 	check_linux_console();
-#endif
 	initoptions();
 	init_nhwindows(&argc,argv);
 	exact_username = whoami();
-#ifdef __linux__
 	init_linux_cons();
-#endif
 
 	/*
 	 * It seems you really want to play.

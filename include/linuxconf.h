@@ -23,9 +23,7 @@
 /* define any of the following that are appropriate */
 #define NETWORK		/* if running on a networked system */
 			/* e.g. Suns sharing a playground through NFS */
-#ifdef __linux__
 #define LINUX	/* Another Unix clone */
-#endif
 
 #define TERMINFO	/* uses terminfo rather than termcap */
 			/* Should be defined for most SYSV, SVR4 (including
@@ -147,12 +145,8 @@
 /* #define NO_MAILREADER */	/* have mail daemon just tell player of mail */
 
 #ifdef MAIL
-# if defined(SYSV) && !defined(LINUX)
-#define DEF_MAILREADER	"/usr/bin/mailx"
-# else
 /* Debian mail reader is /usr/bin/mail, not /bin/mail */
 #define DEF_MAILREADER	"/usr/bin/mail"
-# endif
 
 #endif	/* MAIL */
 
@@ -175,14 +169,12 @@
  */
 
 
-#if defined(LINUX)
 # ifndef POSIX_TYPES
 #  define POSIX_TYPES
 # endif
 # ifndef POSIX_JOB_CONTROL
 #  define POSIX_JOB_CONTROL
 # endif
-#endif
 
 /*
  * BSD/ULTRIX systems are normally the only ones that can suspend processes.
@@ -232,27 +224,18 @@
 # endif
 
 /* Use the high quality random number routines. */
-#if defined(LINUX) || defined(RANDOM)
 #define Rand()	random()
-#else
-#define Rand()	lrand48()
-#endif
 
 #ifdef TIMED_DELAY
-# if defined(LINUX)
 # define msleep(k) usleep((k)*1000)
-# endif
 #endif
 
 
 #if defined(GNOME_GRAPHICS)
-#if defined(LINUX)
 # include <linux/unistd.h>
 # if defined(__NR_getresuid) && defined(__NR_getresgid)	/* ie., >= v2.1.44 */
 #  define GETRES_SUPPORT
 # endif
-#else
-#endif /* LINUX */
 #endif	/* GNOME_GRAPHICS */
 
 #endif /* LINUXLANDCONF_H */
