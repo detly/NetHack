@@ -5,25 +5,12 @@
 #ifndef LINUXLANDCONF_H
 #define LINUXLANDCONF_H
 
-/*
- * Some include files are in a different place under SYSV
- *	BSD		   SYSV
- * <sys/time.h>		<time.h>
- * <sgtty.h>		<termio.h>
- *
- * Some routines are called differently
- * index		strchr
- * rindex		strrchr
- *
- */
-
-#define SYSV		/* define for System V, Solaris 2.x, newer versions */
-			/* of Linux */
+#define SYSV
+#define LINUX
 
 /* define any of the following that are appropriate */
 #define NETWORK		/* if running on a networked system */
 			/* e.g. Suns sharing a playground through NFS */
-#define LINUX	/* Another Unix clone */
 
 #define TERMINFO	/* uses terminfo rather than termcap */
 			/* Should be defined for most SYSV, SVR4 (including
@@ -44,36 +31,6 @@
 			 * Linux, Solaris 2.x
 			 */
 
-/* #define OPENWINBUG */	/* avoid a problem using OpenWindows 3.0 for
-				   X11 on SunOS 4.1.x, x>= 2.  Do not define
-				   for other X11 implementations. */
-/* #define PYRAMID_BUG */	/* avoid a bug on the Pyramid */
-/* #define BSD_43_BUG */	/* for real 4.3BSD cc's without schain botch fix */
-/* #define MICROPORT_BUG */	/* problems with large arrays in structs */
-/* #define MICROPORT_286_BUG */ /* changes needed in termcap.c to get it to
-				   run with Microport Sys V/AT version 2.4.
-				   By Jay Maynard */
-/* #define AIXPS_2BUG */	/* avoid a problem with little_to_big() optimization */
-
-/* #define RANDOM */		/* if neither random/srandom nor lrand48/srand48
-				   is available from your system */
-
-/* see sys/unix/snd86unx.shr for more information on these */
-/* #define UNIX386MUSIC */	/* play real music through speaker on systems
-				   with music driver installed */
-/* #define VPIX_MUSIC */	/* play real music through speaker on systems
-				   with built-in VPIX support */
-
-
-/*
- * The next two defines are intended mainly for the Andrew File System,
- * which does not allow hard links.  If NO_FILE_LINKS is defined, lock files
- * will be created in LOCKDIR using open() instead of in the playground using
- * link().
- *		Ralf Brown, 7/26/89 (from v2.3 hack of 10/10/88)
- */
-
-/* #define NO_FILE_LINKS */	/* if no hard links */
 /* #define LOCKDIR "/usr/games/lib/nethackdir" */	/* where to put locks */
 
 /*
@@ -90,16 +47,6 @@
  * (This might be preferable for security reasons.)
  * #define DEF_PAGER	".../mydir/mypager"
  */
-
-
-
-/*
- * Define PORT_HELP to be the name of the port-specfic help file.
- * This file is found in HACKDIR.
- * Normally, you shouldn't need to change this.
- * There is currently no port-specific help for Unix systems.
- */
-/* #define PORT_HELP "Unixhelp" */
 
 #ifdef TTY_GRAPHICS
 /*
@@ -122,18 +69,6 @@
  */
 
 #define MAIL			/* Deliver mail during the game */
-
-/* The Andrew Message System does mail a little differently from normal
- * UNIX.  Mail is deposited in the user's own directory in ~/Mailbox
- * (another directory).  MAILBOX is the element that will be added on to
- * the user's home directory path to generate the Mailbox path - just in
- * case other Andrew sites do it differently from CMU.
- *
- *		dan lovinger
- *		dl2n+@andrew.cmu.edu (dec 19 1989)
- */
-
-/* #define AMS */		/* use Andrew message system for mail */
 
 /* NO_MAILREADER is for kerberos authenticating filesystems where it is
  * essentially impossible to securely exec child processes, like mail
