@@ -16,9 +16,7 @@
 
 extern struct passwd *FDECL(getpwuid,(uid_t));
 extern struct passwd *FDECL(getpwnam,(const char *));
-#ifdef CHDIR
 static void FDECL(chdirx, (const char *,BOOLEAN_P));
-#endif /* CHDIR */
 static boolean NDECL(whoami);
 static void FDECL(process_options, (int, char **));
 
@@ -36,9 +34,7 @@ int argc;
 char *argv[];
 {
 	register int fd;
-#ifdef CHDIR
 	register char *dir;
-#endif
 	boolean exact_username;
 #ifdef SIMPLE_MAIL
 	char* e_simple = NULL;
@@ -56,7 +52,6 @@ char *argv[];
 
 	choose_windows(DEFAULT_WINDOW_SYS);
 
-#ifdef CHDIR			/* otherwise no chdir() */
 	/*
 	 * See if we must change directory to the playground.
 	 * (Perhaps hack runs suid and playground is inaccessible
@@ -66,9 +61,7 @@ char *argv[];
 	 */
 	dir = nh_getenv("NETHACKDIR");
 	if (!dir) dir = nh_getenv("HACKDIR");
-#endif
 	if(argc > 1) {
-#ifdef CHDIR
 	    if (!strncmp(argv[1], "-d", 2) && argv[1][2] != 'e') {
 		/* avoid matching "-dec" for DECgraphics; since the man page
 		 * says -d directory, hope nobody's using -desomething_else
@@ -86,16 +79,13 @@ char *argv[];
 		    error("Flag -d must be followed by a directory name.");
 	    }
 	    if (argc > 1)
-#endif /* CHDIR */
 
 	    /*
 	     * Now we know the directory containing 'record' and
 	     * may do a prscore().  Exclude `-style' - it's a Qt option.
 	     */
 	    if (!strncmp(argv[1], "-s", 2) && strncmp(argv[1], "-style", 6)) {
-#ifdef CHDIR
 		chdirx(dir,0);
-#endif
 		prscore(argc, argv);
 		exit(EXIT_SUCCESS);
 	    }
@@ -105,9 +95,7 @@ char *argv[];
 	 * Change directories before we initialize the window system so
 	 * we can find the tile file.
 	 */
-#ifdef CHDIR
 	chdirx(dir,1);
-#endif
 
 	check_linux_console();
 	initoptions();
@@ -361,7 +349,6 @@ char *argv[];
 #endif
 }
 
-#ifdef CHDIR
 static void
 chdirx(dir, wr)
 const char *dir;
@@ -417,7 +404,6 @@ boolean wr;
 	    check_recordfile(dir);
 	}
 }
-#endif /* CHDIR */
 
 static boolean
 whoami() {

@@ -230,9 +230,7 @@ int wt;
 	if((f = fork()) == 0){		/* child */
 		(void) setgid(getgid());
 		(void) setuid(getuid());
-#ifdef CHDIR
 		(void) chdir(getenv("HOME"));
-#endif
 		return(1);
 	}
 	if(f == -1) {	/* cannot fork */
